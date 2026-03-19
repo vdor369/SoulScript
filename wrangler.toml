@@ -1,0 +1,5 @@
+name = "openclaw"
+compatibility_date = "2026-03-19"
+
+[ai]
+binding = "AI"

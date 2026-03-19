@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoulScript | Humanizador de IA</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #e0e0e0;
+            --accent: #00ff9d;
+            --accent-hover: #00cc7d;
+            --card: #111111;
+            --border: #333;
+        }
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(0,255,157,0.05) 0%, rgba(10,10,10,1) 100%);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(0,255,157,0.3);
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+        main {
+            width: 90%;
+            max-width: 800px;
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            background: #050505;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 1rem;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0,255,157,0.1);
+        }
+        button {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 0 15px rgba(0,255,157,0.4);
+        }
+        button:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #output {
+            min-height: 150px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .loading {
+            color: var(--accent);
+            text-align: center;
+            display: none;
+        }
+        footer {
+            margin-top: auto;
+            padding: 2rem;
+            color: #555;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SoulScript</h1>
+        <div class="subtitle">Humanizador de IA de Alta Gama</div>
+    </header>
+
+    <main>
+        <div class="card">
+            <label for="inputText">📝 Texto IA (Robótico)</label>
+            <textarea id="inputText" placeholder="Pega aquí tu texto generado por IA..."></textarea>
+        </div>
+
+        <button id="humanizeBtn" onclick="humanizeText()">🔥 Humanizar Texto</button>
+
+        <div class="loading" id="loading">Procesando con Dracarys...</div>
+
+        <div class="card">
+            <label>✨ Resultado Humano</label>
+            <div id="output"></div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 SoulScript | Powered by NVIDIA Dracarys & Tricolors Intelligence
+    </footer>
+
+    <script>
+        async function humanizeText() {
+            const input = document.getElementById('inputText').value;
+            const outputDiv = document.getElementById('output');
+            const btn = document.getElementById('humanizeBtn');
+            const loading = document.getElementById('loading');
+
+            if (!input.trim()) {
+                alert("Por favor, ingresa un texto.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Procesando...";
+            loading.style.display = "block";
+            outputDiv.innerText = "";
+
+            try {
+                const response = await fetch('/humanize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: input })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error en el servidor');
+                }
+
+                const data = await response.json();
+                outputDiv.innerText = data.result;
+            } catch (error) {
+                outputDiv.innerText = "Error: " + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "🔥 Humanizar Texto";
+                loading.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
